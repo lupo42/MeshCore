@@ -208,8 +208,13 @@ public:
 
       } else if (the_mesh.getBLEPin() != 0) { // BT pin
         display.setColor(DisplayDriver::RED);
-        display.setTextSize(2);
-        sprintf(tmp, "Pin:%d", the_mesh.getBLEPin());
+         if (_node_prefs->ble_pin == 0) {
+          display.setTextSize(2);
+          sprintf(tmp, "Pin:%d", the_mesh.getBLEPin());
+        } else {
+          display.setTextSize(1);
+          sprintf(tmp, "< Disconnected >");
+        }
         display.drawTextCentered(display.width() / 2, 43, tmp);
       }
     } else if (_page == HomePage::RECENT) {
