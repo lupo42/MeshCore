@@ -197,9 +197,16 @@ public:
 
       #ifdef WIFI_SSID
         IPAddress ip = WiFi.localIP();
-        snprintf(tmp, sizeof(tmp), "IP: %d.%d.%d.%d", ip[0], ip[1], ip[2], ip[3]);
+        uint8_t baseMac[6];
+        esp_err_t ret = esp_wifi_get_mac(WIFI_IF_STA, baseMac);
+        if (ret == ESP_OK) {
+          snprintf(tmp, sizeof(tmp), "MAC:%02x:%02x:%02x:%02x:%02x:%02x\nIP: %d.%d.%d.%d", baseMac[0], baseMac[1], baseMac[2], baseMac[3], baseMac[4], baseMac[5], ip[0], ip[1], ip[2], ip[3]);
+        } else {
+          snprintf(tmp, sizeof(tmp), "MAC:<unknown>\nIP: %d.%d.%d.%d", ip[0], ip[1], ip[2], ip[3]);
+        }
+
         display.setTextSize(1);
-        display.drawTextCentered(display.width() / 2, 54, tmp); 
+        display.drawTextCentered(display.width() / 2, 43, tmp);
       #endif
       if (_task->hasConnection()) {
         display.setColor(DisplayDriver::GREEN);
