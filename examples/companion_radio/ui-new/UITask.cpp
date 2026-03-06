@@ -4,6 +4,7 @@
 #include "target.h"
 #ifdef WIFI_SSID
   #include <WiFi.h>
+  #include <esp_wifi.h>
 #endif
 
 #ifndef AUTO_OFF_MILLIS
@@ -210,6 +211,7 @@ public:
       display.drawTextCentered(display.width() / 2, 20, tmp);
 
       #ifdef WIFI_SSID
+      if (! _task->hasConnection()) {
         IPAddress ip = WiFi.localIP();
         uint8_t baseMac[6];
         esp_err_t ret = esp_wifi_get_mac(WIFI_IF_STA, baseMac);
@@ -221,6 +223,7 @@ public:
 
         display.setTextSize(1);
         display.drawTextCentered(display.width() / 2, 43, tmp);
+      }
       #endif
       if (_task->hasConnection()) {
         display.setColor(DisplayDriver::GREEN);
